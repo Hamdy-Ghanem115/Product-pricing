@@ -60,9 +60,11 @@ function calc(v, cpp) {
   const totalShippingCost = deliveredShippingCost + returnedShippingCost;
   const grossSales = deliveredOrders * v.sellPrice;
   const totalProductCost = deliveredOrders * v.cost;
+  const targetProductPurchaseCost = v.targetQty * v.cost;
   const profitAfterProductCost = grossSales - totalProductCost;
   const profitAfterShipping = profitAfterProductCost - totalShippingCost;
   const totalAdsSpent = v.targetQty * n(cpp);
+  const startupCapital = targetProductPurchaseCost + totalAdsSpent;
   const netProfit = profitAfterShipping - totalAdsSpent;
 
   return {
@@ -75,9 +77,11 @@ function calc(v, cpp) {
     totalShippingCost,
     grossSales,
     totalProductCost,
+    targetProductPurchaseCost,
     profitAfterProductCost,
     profitAfterShipping,
     totalAdsSpent,
+    startupCapital,
     netProfit
   };
 }
@@ -102,6 +106,8 @@ function render() {
     { t: "عدد الأوردرات المرتجعة", v: r.returnedOrders.toFixed(0), cls: "" },
     { t: "إجمالي مصاريف الشحن", v: money(v.currency, r.totalShippingCost), cls: "" },
     { t: "إجمالي المبيعات", v: money(v.currency, r.grossSales), cls: "" },
+    { t: "تكلفة شراء المنتجات (التارجت)", v: money(v.currency, r.targetProductPurchaseCost), cls: "" },
+    { t: "رأس المال الكافي للبدء", v: money(v.currency, r.startupCapital), cls: "" },
     {
       t: "الربح بعد تكلفة المنتجات",
       v: money(v.currency, r.profitAfterProductCost),
