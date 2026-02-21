@@ -101,7 +101,35 @@
           </thead>
           <tbody id="adsRow"></tbody>
         </table>
+
+        <button id="openBuyerSalaryModal" class="action-btn" type="button">عرض تقسيم مرتب الميديا باير</button>
       </section>
+    </div>
+  </div>
+
+  <div id="buyerSalaryModal" class="modal" aria-hidden="true">
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="buyerSalaryTitle">
+      <div class="modal-head">
+        <h2 id="buyerSalaryTitle">Calculate Profit After Ads</h2>
+        <button id="closeBuyerSalaryModal" class="close-btn" type="button" aria-label="إغلاق">×</button>
+      </div>
+
+      <div class="modal-table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Average CPP</th>
+              <th>Total Ads Spent</th>
+              <th>Net Profit</th>
+              <th>30% من الأرباح</th>
+              <th>30% من مصروف الإعلانات</th>
+              <th>10% من الأرباح + 9000</th>
+              <th>5% من المبيعات</th>
+            </tr>
+          </thead>
+          <tbody id="buyerSalaryRows"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 

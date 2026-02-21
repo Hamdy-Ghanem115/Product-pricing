@@ -26,6 +26,10 @@ function moneyHtml(cur, amount) {
   return `<span class="${cls}">${money(cur, amount)}</span>`;
 }
 
+function moneyCellHtml(cur, amount) {
+  return `<td class="${amount < 0 ? "bad" : ""}">${money(cur, amount)}</td>`;
+}
+
 function parseCppList(raw) {
   return (raw || "")
     .split(",")
@@ -163,6 +167,33 @@ function render() {
         `;
     })
     .join("");
+
+  renderBuyerSalaryRows(v, cppValues);
+}
+
+function renderBuyerSalaryRows(v, cppValues) {
+  const body = $("buyerSalaryRows");
+  body.innerHTML = cppValues
+    .map((cppVal) => {
+      const rr = calc(v, cppVal);
+      const salary30Profit = rr.netProfit * 0.3;
+      const salary30Ads = rr.totalAdsSpent * 0.3;
+      const salary10ProfitPlusFixed = rr.netProfit * 0.1 + 9000;
+      const salary5Sales = rr.grossSales * 0.05;
+
+      return `
+        <tr>
+          <td>${money(v.currency, cppVal)}</td>
+          <td>${money(v.currency, rr.totalAdsSpent)}</td>
+          ${moneyCellHtml(v.currency, rr.netProfit)}
+          ${moneyCellHtml(v.currency, salary30Profit)}
+          ${moneyCellHtml(v.currency, salary30Ads)}
+          ${moneyCellHtml(v.currency, salary10ProfitPlusFixed)}
+          ${moneyCellHtml(v.currency, salary5Sales)}
+        </tr>
+      `;
+    })
+    .join("");
 }
 
 const ids = [
@@ -180,6 +211,34 @@ const ids = [
 
 ids.forEach((id) => {
   $(id).addEventListener("input", render);
+});
+
+const modal = $("buyerSalaryModal");
+const openModalBtn = $("openBuyerSalaryModal");
+const closeModalBtn = $("closeBuyerSalaryModal");
+
+openModalBtn.addEventListener("click", () => {
+  modal.classList.add("show");
+  modal.setAttribute("aria-hidden", "false");
+});
+
+closeModalBtn.addEventListener("click", () => {
+  modal.classList.remove("show");
+  modal.setAttribute("aria-hidden", "true");
+});
+
+modal.addEventListener("click", (e) => {
+  if (e.target === modal) {
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+  }
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && modal.classList.contains("show")) {
+    modal.classList.remove("show");
+    modal.setAttribute("aria-hidden", "true");
+  }
 });
 
 render();
