@@ -11,7 +11,11 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>حاسبة ربحية المنتج والشحن</h1>
+    <div class="page-head">
+      <h1>حاسبة ربحية المنتج والشحن</h1>
+      <button id="printReportBtn" class="action-btn secondary header-print-btn" type="button">طباعة التقرير</button>
+    </div>
+
     <div class="layout">
       <section class="card">
         <h2>المدخلات</h2>
@@ -62,11 +66,11 @@
 
         <div class="row">
           <div class="field">
-            <label for="deliveryRate">نسبة التسليم من المأكد (اكتب 80 أو 0.8)</label>
+            <label for="deliveryRate">نسبة التسليم من المؤكد (اكتب 80 أو 0.8)</label>
             <input id="deliveryRate" type="number" step="0.01" value="80" />
           </div>
           <div class="field">
-            <label for="cppList">CPP List (مثال: 40,50,108)</label>
+            <label for="cppList">قائمة CPP (مثال: 40,50,108)</label>
             <input id="cppList" value="40,50,108,120,150" />
           </div>
         </div>
@@ -102,10 +106,14 @@
           <tbody id="adsRow"></tbody>
         </table>
 
-        <button id="openBuyerSalaryModal" class="action-btn" type="button">عرض تقسيم مرتب الميديا باير</button>
+        <div class="actions-row">
+          <button id="openBuyerSalaryModal" class="action-btn" type="button">عرض تقسيم مرتب الميديا باير</button>
+        </div>
       </section>
     </div>
   </div>
+
+  <section id="printReport" class="print-report" aria-hidden="true"></section>
 
   <div id="buyerSalaryModal" class="modal" aria-hidden="true">
     <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="buyerSalaryTitle">
