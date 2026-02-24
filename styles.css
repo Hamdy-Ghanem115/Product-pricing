@@ -341,6 +341,78 @@ tbody tr:last-child td {
   overflow: hidden;
 }
 
+.print-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.print-table-wrap.wide {
+  overflow-x: auto;
+}
+
+.report-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.summary-table th:first-child,
+.summary-table td:first-child {
+  width: 50%;
+}
+
+.summary-table th:last-child,
+.summary-table td:last-child {
+  width: 50%;
+}
+
+.ads-table th,
+.ads-table td {
+  width: 33.333%;
+  text-align: center;
+}
+
+.salary-table {
+  min-width: 940px;
+  table-layout: auto;
+}
+
+.salary-table th,
+.salary-table td {
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.print-kpis {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.print-kpi {
+  border: 1px solid #d6e0ef;
+  border-radius: 12px;
+  padding: 10px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6faff 100%);
+  min-height: 84px;
+}
+
+.print-kpi-title {
+  color: #4a6286;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.45;
+  margin-bottom: 7px;
+}
+
+.print-kpi-value {
+  font-size: 24px;
+  line-height: 1.2;
+  color: #123663;
+  font-weight: 800;
+}
+
 .analysis-list {
   margin: 10px 0 14px;
   padding: 0 18px 0 0;
@@ -516,6 +588,39 @@ tbody tr:last-child td {
     border-color: #d2d8e4;
   }
 
+  .summary-table th,
+  .summary-table td {
+    text-align: right;
+    white-space: normal;
+  }
+
+  .ads-table th,
+  .ads-table td,
+  .salary-table th,
+  .salary-table td {
+    text-align: center;
+  }
+
+  .print-kpis {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .print-kpi {
+    min-height: 68px;
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  .print-kpi-title {
+    font-size: 10px;
+    margin-bottom: 4px;
+  }
+
+  .print-kpi-value {
+    font-size: 16px;
+  }
+
   .analysis-list li {
     font-size: 11px;
   }
@@ -535,5 +640,24 @@ tbody tr:last-child td {
 
   .chart-svg {
     border-width: 0.8px;
+  }
+
+  .print-table-wrap.wide {
+    overflow: visible;
+  }
+
+  .salary-table {
+    min-width: 0;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  .salary-table th,
+  .salary-table td {
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.25;
+    font-size: 9px;
+    padding: 4px 3px;
   }
 }

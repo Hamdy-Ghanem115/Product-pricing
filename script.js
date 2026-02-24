@@ -382,20 +382,26 @@ function renderPrintReport(v, r, cppValues, firstCpp, lastCpp, firstResult, last
     { label: "شحن القطعة المرتجعة", value: v.shipReturned }
   ];
 
-  const inputRows = [
-    ["اسم المنتج", esc(v.productName || "-")],
-    ["العملة", esc(v.currency)],
-    ["تكلفة المنتج", money(v.currency, v.cost)],
-    ["سعر البيع", money(v.currency, v.sellPrice)],
-    ["شحن المسلَّم", money(v.currency, v.shipDelivered)],
-    ["شحن المرتجع", money(v.currency, v.shipReturned)],
-    ["التارجت", v.targetQty],
-    ["نسبة التأكيد", `${(v.confirmRate * 100).toFixed(2)}%`],
-    ["نسبة التسليم", `${(v.deliveryRate * 100).toFixed(2)}%`],
-    ["CPP List", esc(cppValues.join(", "))]
+  const importantKpis = [
+    { label: "Gross Profit للقطعة", value: money(v.currency, r.grossProfitPerPiece), cls: r.grossProfitPerPiece >= 0 ? "good" : "" },
+    { label: "عدد الأوردرات المسلمة", value: r.deliveredOrders.toFixed(0), cls: "" },
+    { label: "عدد الأوردرات المرتجعة", value: r.returnedOrders.toFixed(0), cls: "" },
+    { label: "إجمالي المبيعات", value: money(v.currency, r.grossSales), cls: "" },
+    { label: "إجمالي مصاريف الشحن", value: money(v.currency, r.totalShippingCost), cls: "" },
+    { label: "تكلفة شراء المنتجات (التارجت)", value: money(v.currency, r.targetProductPurchaseCost), cls: "" },
+    { label: "رأس المال الكافي للبدء", value: money(v.currency, r.startupCapital), cls: "" },
+    { label: "Profit After Shipping", value: money(v.currency, r.profitAfterShipping), cls: r.profitAfterShipping >= 0 ? "good" : "bad" }
   ];
 
   const summaryRows = [
+    ["اسم المنتج", esc(v.productName || "-")],
+    ["العملة", esc(v.currency)],
+    ["التارجت", v.targetQty],
+    ["قائمة CPP", esc(cppValues.join(", "))],
+    ["تكلفة المنتج للقطعة", money(v.currency, v.cost)],
+    ["سعر البيع للقطعة", money(v.currency, v.sellPrice)],
+    ["تكلفة شحن القطعة المسلمة", money(v.currency, v.shipDelivered)],
+    ["تكلفة شحن القطعة المرتجعة", money(v.currency, v.shipReturned)],
     ["عدد الأوردرات المؤكدة", r.confirmedOrders.toFixed(0)],
     ["عدد الأوردرات المسلمة", r.deliveredOrders.toFixed(0)],
     ["عدد الأوردرات المرتجعة", r.returnedOrders.toFixed(0)],
@@ -405,8 +411,6 @@ function renderPrintReport(v, r, cppValues, firstCpp, lastCpp, firstResult, last
     ["نسبة المرتجعات من المؤكد", `${(r.returnRate * 100).toFixed(2)}%`],
     ["إجمالي المبيعات", money(v.currency, r.grossSales)],
     ["إجمالي مصاريف الشحن", money(v.currency, r.totalShippingCost)],
-    ["تكلفة شحن القطعة المسلمة", money(v.currency, v.shipDelivered)],
-    ["تكلفة شحن القطعة المرتجعة", money(v.currency, v.shipReturned)],
     ["تكلفة شراء المنتجات (التارجت)", money(v.currency, r.targetProductPurchaseCost)],
     ["رأس المال الكافي للبدء", money(v.currency, r.startupCapital)],
     ["Profit After Shipping", money(v.currency, r.profitAfterShipping)],
@@ -447,28 +451,36 @@ function renderPrintReport(v, r, cppValues, firstCpp, lastCpp, firstResult, last
 
   report.innerHTML = `
     <div class="print-block">
-      <h2>تقرير حاسبة ربحية المنتج</h2>
+      <h2>تقرير ربحية المنتج: ${esc(v.productName || "بدون اسم")}</h2>
       <p class="print-meta">تاريخ الطباعة: ${esc(printDate)}</p>
     </div>
 
     <div class="print-block">
-      <h2>المدخلات</h2>
-      <table>
-        <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
-        <tbody>
-          ${inputRows.map(([k, val]) => `<tr><td>${k}</td><td>${val}</td></tr>`).join("")}
-        </tbody>
-      </table>
+      <h2>النتائج المهمة</h2>
+      <div class="print-kpis">
+        ${importantKpis
+          .map(
+            (kpi) => `
+              <div class="print-kpi">
+                <div class="print-kpi-title">${kpi.label}</div>
+                <div class="print-kpi-value ${kpi.cls}">${kpi.value}</div>
+              </div>
+            `
+          )
+          .join("")}
+      </div>
     </div>
 
     <div class="print-block">
       <h2>الملخص</h2>
-      <table>
+      <div class="print-table-wrap">
+      <table class="report-table summary-table">
         <thead><tr><th>البند</th><th>القيمة</th></tr></thead>
         <tbody>
           ${summaryRows.map(([k, val]) => `<tr><td>${k}</td><td>${val}</td></tr>`).join("")}
         </tbody>
       </table>
+      </div>
     </div>
 
     <div class="print-block">
@@ -530,7 +542,8 @@ function renderPrintReport(v, r, cppValues, firstCpp, lastCpp, firstResult, last
 
     <div class="print-block">
       <h2>Calculate Profit After Ads</h2>
-      <table>
+      <div class="print-table-wrap">
+      <table class="report-table ads-table">
         <thead>
           <tr>
             <th>Average CPP</th>
@@ -540,11 +553,13 @@ function renderPrintReport(v, r, cppValues, firstCpp, lastCpp, firstResult, last
         </thead>
         <tbody>${adsRowsHtml}</tbody>
       </table>
+      </div>
     </div>
 
     <div class="print-block">
       <h2>تقسيم مرتب الميديا باير</h2>
-      <table>
+      <div class="print-table-wrap wide">
+      <table class="report-table salary-table">
         <thead>
           <tr>
             <th>Average CPP</th>
@@ -558,6 +573,7 @@ function renderPrintReport(v, r, cppValues, firstCpp, lastCpp, firstResult, last
         </thead>
         <tbody>${salaryRowsHtml}</tbody>
       </table>
+      </div>
     </div>
   `;
 }
